@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
  **/
 @Controller
 @RequestMapping("/manager/user")
-public class UserManagerController {
+public class UserManageController {
     @Autowired
     private IUserService iUserService;
 

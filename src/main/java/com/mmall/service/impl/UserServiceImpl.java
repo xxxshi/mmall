@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service("iUerService")
-public class UserService implements IUserService{
+public class UserServiceImpl implements IUserService{
 
     @Autowired
     private UserMapper userMapper;
@@ -236,5 +236,18 @@ public class UserService implements IUserService{
         }
 
         return ServerResponse.createByErrorMsg("获得用户信息失败");
+    }
+
+    /**
+     * 验证用户是否是管理员--业务层
+     * @param user
+     * @return
+     */
+    @Override
+    public boolean checkIsAdmin(User user){
+        if(user!=null&&user.getRole().intValue()==Const.Role.ROLE_ADMIN){
+            return true;
+        }
+        return false;
     }
 }
