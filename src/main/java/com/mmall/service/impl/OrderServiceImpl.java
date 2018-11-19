@@ -115,6 +115,7 @@ public class OrderServiceImpl implements IOrderService {
         }
         //批量将订单详细信息插入订单详细表
         orderItemMapper.batchInsert(orderItemList);
+
         //减少库存
         this.reduceProductStock(orderItemList);
         this.clearCart(cartList);
@@ -172,7 +173,8 @@ public class OrderServiceImpl implements IOrderService {
      */
     public ServerResponse<PageInfo> getOrderList(Integer userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        List<Order> orderList =  orderMapper.selectByUserId(userId);
+        //查询已付款的订单
+        List<Order> orderList =  orderMapper.selectByUserIdOrderList(userId);
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
         PageInfo pageInfo = new PageInfo(orderList);
         pageInfo.setList(orderVoList);
@@ -332,7 +334,11 @@ public class OrderServiceImpl implements IOrderService {
         order.setStatus(Const.OrderStatusEnum.NO_PAY.getCode());
         order.setPostage(0);
         order.setPaymentType(Const.PaymentTypeEnum.ONLINE_PAY.getCode());
-        return order;
+        int rowCount = orderMapper.insert(order);
+        if(rowCount > 0){
+            return order;
+        }
+        return null;
     }
 
     /**
@@ -615,6 +621,7 @@ public class OrderServiceImpl implements IOrderService {
 
                 File targetFile = new File(path,qrFileName);
                 try {
+                    //支付二维码上传到ftp服务器
                     FTPUtil.uploadFile(Lists.newArrayList(targetFile));
                 } catch (IOException e) {
                     logger.error("上传二维码异常",e);

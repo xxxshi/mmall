@@ -39,6 +39,11 @@ public class ProductServiceImpl implements IProductService{
     @Autowired
     private ICategoryService iCategoryService;
 
+    /**
+     * 添加商品
+     * @param product
+     * @return
+     */
     @Override
     public ServerResponse saveOrUpdateProduct(Product product) {
         if (product != null) {
@@ -128,7 +133,8 @@ public class ProductServiceImpl implements IProductService{
         productDetailVo.setStatus(product.getStatus());
         productDetailVo.setStock(product.getStock());
 
-        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://img.happymmall.com/"));
+        //productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://img.happymmall" +".com/"));
+        productDetailVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix","http://img.mmall.com/"));
 
         Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
         if(category == null){

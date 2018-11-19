@@ -20,7 +20,7 @@ import java.util.List;
 public class FTPUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FTPUtil.class);
-    private static String ftpIp = PropertiesUtil.getProperty("");
+    private static String ftpIp = PropertiesUtil.getProperty("ftp.server.ip");
     private static String ftpUser = PropertiesUtil.getProperty("ftp.user");
     private static String ftpPassword = PropertiesUtil.getProperty("ftp.pass");
 

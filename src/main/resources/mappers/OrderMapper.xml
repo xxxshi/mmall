@@ -214,11 +214,19 @@
     FROM  mmall_order
     where order_no = #{orderNo}
   </select>
-  
+
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="int">
     select <include refid="Base_Column_List"/>
     from mmall_order
     where user_id = #{userId}
+  </select>
+  
+  <select id="selectByUserIdOrderList" resultMap="BaseResultMap" parameterType="int">
+    select <include refid="Base_Column_List"/>
+    from mmall_order
+    where user_id = #{userId}
+    and status > 10
+    order by payment_time desc
   </select>
 
   <select id="selectAll" resultMap="BaseResultMap">

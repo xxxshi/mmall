@@ -43,9 +43,13 @@ public class ServerResponse<T> implements Serializable {
      * @return
      */
     //不在序列化Json结果中
-    @JsonIgnore
+//    @JsonIgnore?
     public boolean isSuccess(){
         return this.status == ResponseCode.SECCESS.getCode();
+    }
+
+    public int getStatus() {
+        return this.status;
     }
 
     public String getMsg(){

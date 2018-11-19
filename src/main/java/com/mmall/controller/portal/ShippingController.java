@@ -37,9 +37,9 @@ public class ShippingController {
         return iShippingService.add(currentUser.getId(),shipping);
     }
 
-    @RequestMapping("delete.do")
+    @RequestMapping("del.do")
     @ResponseBody
-    public ServerResponse add(HttpSession session, Integer shippingId) {
+    public ServerResponse del(HttpSession session, Integer shippingId) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if (currentUser == null) {
             return ServerResponse.createByErrorMsg("用户未登陆！");
@@ -57,9 +57,9 @@ public class ShippingController {
         return iShippingService.update(currentUser.getId(),shipping);
     }
 
-    @RequestMapping("search.do")
+    @RequestMapping("select.do")
     @ResponseBody
-    public ServerResponse<Shipping> search(HttpSession session, Integer shippingId) {
+    public ServerResponse<Shipping> select(HttpSession session, Integer shippingId) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if (currentUser == null) {
             return ServerResponse.createByErrorMsg("用户未登陆！");

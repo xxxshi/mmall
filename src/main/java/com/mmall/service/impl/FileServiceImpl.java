@@ -43,9 +43,10 @@ public class FileServiceImpl implements IFileService {
         try {
             //文件上传tomcat服务器成功
             file.transferTo(targetFile);
-            //文件上传ftp服务器成功
-            //FTPUtil.uploadFile(Lists.newArrayList(targetFile));
-
+            //文件上传ftp服务器成功ftp文件上传
+            FTPUtil.uploadFile(Lists.newArrayList(targetFile));
+            //删除文件，ps：tocamt中
+            targetFile.delete();
         } catch (IOException e) {
             logger.error("文件上传失败"+e);
             return null;

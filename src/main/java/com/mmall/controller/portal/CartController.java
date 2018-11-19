@@ -69,9 +69,9 @@ public class CartController {
      * @param count
      * @return
      */
-    @RequestMapping("delete.do")
+    @RequestMapping("delete_product.do")
     @ResponseBody
-    public ServerResponse<CartVo> delete(HttpSession session, String productIds) {
+    public ServerResponse<CartVo> delete_product(HttpSession session, String productIds) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if (currentUser ==null) {
             return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
