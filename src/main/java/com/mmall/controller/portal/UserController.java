@@ -5,12 +5,17 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.CookieUtil;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.RedisPoolUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -31,10 +36,14 @@ public class UserController {
      */
     @RequestMapping(value = "login.do")
     @ResponseBody
-    public ServerResponse<User> login(String username, String password, HttpSession session){
+    public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse){
         ServerResponse<User> response = iUserService.login(username,password);
         if(response.isSuccess()){
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+            //将请求的Cookie写入httpServletResponse
+            CookieUtil.writeLoginToken(httpServletResponse,session.getId());
+            //key：sessionID   value:User对象序列化成的字符串  exTime:Const.RedisCacheExtime
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.objectToString(response.getData()),Const.RedisCacheExtime
+                    .REDIS_SESSION_EXTIME);
         }
         return response;
     }
@@ -46,8 +55,11 @@ public class UserController {
      */
     @RequestMapping(value = "logout.do")
     @ResponseBody
-    public ServerResponse<String> logout(HttpSession session) {
-        session.removeAttribute(Const.CURRENT_USER);
+    public ServerResponse<String> logout(HttpSession session, HttpServletRequest httpServletRequest,
+                                         HttpServletResponse httpServletResponse) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
+        RedisPoolUtil.del(loginToken);
         return ServerResponse.createBySuccess();
     }
 
@@ -81,13 +93,18 @@ public class UserController {
      */
     @RequestMapping(value = "get_user_info.do")
     @ResponseBody
-    public ServerResponse<User> getUserInfo(HttpSession session) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
-        System.out.println("info"+session.getId());
-        if(user==null){
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+    public ServerResponse<User> getUserInfo(HttpSession session,HttpServletRequest httpServletRequest) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return ServerResponse.createBySuccess(user);
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user != null){
+            return ServerResponse.createBySuccess(user);
+        }
+        return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
     }
 
     /**

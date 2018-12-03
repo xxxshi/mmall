@@ -36,6 +36,7 @@ public class CartController {
     @RequestMapping("add.do")
     @ResponseBody
     public ServerResponse<CartVo> add(HttpSession session, Integer productId, Integer count) {
+
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         if (currentUser ==null) {
             return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());

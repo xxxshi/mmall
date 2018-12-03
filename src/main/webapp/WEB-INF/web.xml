@@ -3,8 +3,18 @@
          xmlns="http://java.sun.com/xml/ns/javaee"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          id="WebApp_ID" version="2.5">
+    <!--session有效期重置-->
+    <filter>
+        <filter-name>sessionExpireFliter</filter-name>
+        <filter-class>com.mmall.controller.common.SessionExpireFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>sessionExpireFliter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
 
 
+    <!-- 简单解决跨域问题，发布时删除-->
     <filter>
         <filter-name>cors</filter-name>
         <filter-class>com.mmall.controller.CORSFilter</filter-class>
@@ -14,7 +24,7 @@
         <filter-name>cors</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    <!-- -->
     <display-name>Archetype Created Web Application</display-name>
 
     <filter>
