@@ -1,8 +1,10 @@
 package com.mmall.util;
 
 import com.mmall.common.Redis;
+import com.mmall.common.RedisShardedPool;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
 
 /**
  * @program: mmall
@@ -12,55 +14,55 @@ import redis.clients.jedis.Jedis;
  * @Version: 1.0
  **/
 @Slf4j
-public class RedisPoolUtil {
+public class ShardedRedisPoolUtil {
 
     public static String set(String key, String value) {
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String result = null;
 
         try {
-            jedis = Redis.getJedis();
+            jedis = RedisShardedPool.getJedis();
             result = jedis.set(key, value);
         } catch (Exception e) {
             log.error("set key {} value {} ", key, value, e);
-            Redis.returnBrokenResource(jedis);
+            RedisShardedPool.returnBrokenResource(jedis);
             return result;
         }
 
-        Redis.returnResource(jedis);
+        RedisShardedPool.returnResource(jedis);
         return result;
     }
 
     public static String setEx(String key, String value,int exTime) {
-        Jedis jedis = null;
+        ShardedJedis jedis = null;
         String result = null;
         try {
-            jedis = Redis.getJedis();
+            jedis = RedisShardedPool.getJedis();
             result = jedis.setex(key, exTime,value);
         } catch (Exception e) {
             log.error("set key{} value{} exTime{}", key, value,exTime, e);
-            Redis.returnBrokenResource(jedis);
+            RedisShardedPool.returnBrokenResource(jedis);
             return result;
         }
 
-        Redis.returnResource(jedis);
+        RedisShardedPool.returnResource(jedis);
         return result;
     }
 
     public static String get(String key) {
-        Jedis jedis = null;
+        ShardedJedis ShardJedis = null;
         String result = null;
 
         try {
-            jedis = Redis.getJedis();
-            result = jedis.get(key);
+            ShardJedis = RedisShardedPool.getJedis();
+            result = ShardJedis.get(key);
         } catch (Exception e) {
             log.error("get key {} ", key,  e);
-            Redis.returnBrokenResource(jedis);
+            RedisShardedPool.returnBrokenResource(ShardJedis);
             return result;
         }
 
-        Redis.returnResource(jedis);
+        RedisShardedPool.returnResource(ShardJedis);
         return result;
     }
 
@@ -71,40 +73,46 @@ public class RedisPoolUtil {
      * @return
      */
     public static Long expire(String key, int exTime) {
-        Jedis jedis = null;
+        ShardedJedis ShardJedis = null;
         Long result = null;
 
         try {
-            jedis = Redis.getJedis();
-            result = jedis.expire(key, exTime);
+            ShardJedis = RedisShardedPool.getJedis();
+            result = ShardJedis.expire(key, exTime);
         } catch (Exception e) {
             log.error("set key{} exTime{} ", key, exTime,e);
-            Redis.returnBrokenResource(jedis);
+            RedisShardedPool.returnBrokenResource(ShardJedis);
             return result;
         }
 
-        Redis.returnResource(jedis);
+        RedisShardedPool.returnResource(ShardJedis);
         return result;
     }
 
     public static Long del(String key) {
-        Jedis jedis = null;
+        ShardedJedis ShardJedis = null;
         Long result = null;
 
         try {
-            jedis = Redis.getJedis();
-            result = jedis.del(key);
+            ShardJedis = RedisShardedPool.getJedis();
+            result = ShardJedis.del(key);
         } catch (Exception e) {
             log.error("del key{} ", key,  e);
-            Redis.returnBrokenResource(jedis);
+            RedisShardedPool.returnBrokenResource(ShardJedis);
             return result;
         }
 
-        Redis.returnResource(jedis);
+        RedisShardedPool.returnResource(ShardJedis);
         return result;
     }
 
 
+    public static void main(String[] args) {
 
+        for (int i = 0; i <10 ; i++) {
+            ShardedRedisPoolUtil.set("key" + i, ""+i);
+        }
+
+    }
 
 }

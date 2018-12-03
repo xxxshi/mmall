@@ -6,7 +6,7 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
-import com.mmall.util.RedisPoolUtil;
+import com.mmall.util.ShardedRedisPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,7 +134,7 @@ public class UserServiceImpl implements IUserService{
         int resultCount = userMapper.checkAnswer(username,question,answer);
         if(resultCount>0){
             String forgetToken = UUID.randomUUID().toString();
-            RedisPoolUtil.setEx(Const.TOKEN_PREFIX + username, forgetToken, 60 * 60 * 12);
+            ShardedRedisPoolUtil.setEx(Const.TOKEN_PREFIX + username, forgetToken, 60 * 60 * 12);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMsg("验证密码错误");
@@ -159,7 +159,7 @@ public class UserServiceImpl implements IUserService{
             return ServerResponse.createByErrorMsg("forgetToken为空");
         }
         //forgetToken失效或不存在
-        String token = RedisPoolUtil.get(Const.TOKEN_PREFIX + username);
+        String token = ShardedRedisPoolUtil.get(Const.TOKEN_PREFIX + username);
         if(StringUtils.isBlank(token)){
             return ServerResponse.createByErrorMsg("Token 失效或不存在");
         }
