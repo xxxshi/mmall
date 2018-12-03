@@ -153,8 +153,13 @@ public class UserController {
      */
     @RequestMapping(value = "reset_password.do")
     @ResponseBody
-    public ServerResponse<String> resetPassword(HttpSession session,String passwordOld,String passwordNew ){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<String> resetPassword(HttpServletRequest httpServletRequest,String passwordOld,String passwordNew ){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User currentUser = JsonUtil.stringToObject(userJsonStr,User.class);
         if(currentUser==null){
             return ServerResponse.createByErrorMsg("用户未登陆");
         }
@@ -169,8 +174,14 @@ public class UserController {
      */
     @RequestMapping(value = "update_information.do")
     @ResponseBody
-    public ServerResponse<User> updateInformation(HttpSession session,User user){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<User> updateInformation(HttpServletRequest httpServletRequest,HttpServletResponse
+            httpServletResponse,User user){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User currentUser = JsonUtil.stringToObject(userJsonStr,User.class);;
         if(currentUser==null){
             return ServerResponse.createByErrorMsg("用户未登陆");
         }
@@ -178,7 +189,9 @@ public class UserController {
         user.setUsername(currentUser.getUsername());
         ServerResponse<User> response = iUserService.updateInformation(user);
         if(response.isSuccess()){
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+            //key：cookieId   value:User对象序列化成的字符串  exTime:Const.RedisCacheExtime
+            RedisPoolUtil.setEx(loginToken, JsonUtil.objectToString(response.getData()),Const.RedisCacheExtime
+                    .REDIS_SESSION_EXTIME);
         }
         return response;
     }

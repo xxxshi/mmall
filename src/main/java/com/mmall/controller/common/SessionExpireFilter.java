@@ -33,12 +33,12 @@ public class SessionExpireFilter implements Filter{
             String jsonStr = RedisPoolUtil.get(loginCookId);
             User user = JsonUtil.stringToObject(jsonStr, User.class);
             if (user != null) {
-                //Redis中User字符串没有过期
+                //Redis中User字符串没有过期,重置时间
                 RedisPoolUtil.expire(loginCookId, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
             }
         }
 
-
+        chain.doFilter(request,response);
     }
 
     @Override
