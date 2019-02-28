@@ -8,7 +8,7 @@ import redis.clients.jedis.ShardedJedis;
 
 /**
  * @program: mmall
- * @description: redisPool工具类
+ * @description: redisPool工具类。该类调用RedisShardedPool获得redis实例，即使用该类的静态方法来具体地使用redis数据库的存储
  * @author: xxxshi
  * @create: 2018-12-02 08:23
  * @Version: 1.0
@@ -52,7 +52,6 @@ public class ShardedRedisPoolUtil {
     public static String get(String key) {
         ShardedJedis ShardJedis = null;
         String result = null;
-
         try {
             ShardJedis = RedisShardedPool.getJedis();
             result = ShardJedis.get(key);

@@ -101,10 +101,12 @@ public class UserController {
         String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
         User user = JsonUtil.stringToObject(userJsonStr,User.class);
 
-        if(user != null){
-            return ServerResponse.createBySuccess(user);
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
+
+        return ServerResponse.createBySuccess(user);
+
     }
 
     /**
@@ -203,12 +205,19 @@ public class UserController {
      */
     @RequestMapping(value = "get_information.do")
     @ResponseBody
-    public ServerResponse<User> updateInformation(HttpSession session){
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if(currentUser==null){
-            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆");
+    public ServerResponse<User> updateInformation(HttpSession session,HttpServletRequest httpServletRequest){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iUserService.getInformation(currentUser.getId());
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return ServerResponse.createBySuccess(user);
     }
 
 

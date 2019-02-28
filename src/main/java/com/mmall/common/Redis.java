@@ -6,8 +6,8 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
- * @program: mmall
- * @description: redis配置类
+ * @program: mmall,已废弃，被分布式RedisShardedpool取代
+ * @description: redis配置类,
  * @author: xxxshi
  * @create: 2018-12-01 09:47
  * @Version:

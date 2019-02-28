@@ -6,7 +6,7 @@ import redis.clients.jedis.Jedis;
 
 /**
  * @program: mmall
- * @description: redisPool工具类
+ * @description: redisPool工具类，已废弃
  * @author: xxxshi
  * @create: 2018-12-02 08:23
  * @Version: 1.0

@@ -1,16 +1,22 @@
 package com.mmall.controller.portal;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Shipping;
 import com.mmall.pojo.User;
 import com.mmall.service.IShippingService;
+import com.mmall.util.CookieUtil;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.ShardedRedisPoolUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -29,56 +35,86 @@ public class ShippingController {
 
     @RequestMapping("add.do")
     @ResponseBody
-    public ServerResponse add(HttpSession session, Shipping shipping) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+    public ServerResponse add(HttpServletRequest httpServletRequest, Shipping shipping) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iShippingService.add(currentUser.getId(),shipping);
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.add(user.getId(),shipping);
     }
 
     @RequestMapping("del.do")
     @ResponseBody
-    public ServerResponse del(HttpSession session, Integer shippingId) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+    public ServerResponse del(HttpServletRequest httpServletRequest, Integer shippingId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iShippingService.delete(currentUser.getId(),shippingId);
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.delete(user.getId(),shippingId);
     }
 
     @RequestMapping("update.do")
     @ResponseBody
-    public ServerResponse update(HttpSession session, Shipping shipping) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+    public ServerResponse update(HttpServletRequest httpServletRequest, Shipping shipping) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iShippingService.update(currentUser.getId(),shipping);
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.update(user.getId(),shipping);
     }
 
     @RequestMapping("select.do")
     @ResponseBody
-    public ServerResponse<Shipping> select(HttpSession session, Integer shippingId) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+    public ServerResponse<Shipping> select(HttpServletRequest httpServletRequest, Integer shippingId) {
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iShippingService.search(currentUser.getId(),shippingId);
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.search(user.getId(),shippingId);
     }
 
 
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServerResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1")Integer
+    public ServerResponse list(HttpServletRequest httpServletRequest, @RequestParam(value = "pageNum",defaultValue = "1")Integer
             pageNum,@RequestParam(value = "pageSize",defaultValue = "10")Integer
             pageSize) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if (currentUser == null) {
-            return ServerResponse.createByErrorMsg("用户未登陆！");
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户的信息");
         }
-        return iShippingService.list(currentUser.getId(),pageNum,pageSize);
+        String userJsonStr = ShardedRedisPoolUtil.get(loginToken);
+        User user = JsonUtil.stringToObject(userJsonStr,User.class);
+
+        if(user ==null){
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iShippingService.list(user.getId(),pageNum,pageSize);
     }
 
 

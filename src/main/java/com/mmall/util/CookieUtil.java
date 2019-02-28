@@ -7,9 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Created by geely
- */
+
 @Slf4j
 public class CookieUtil {
 
@@ -76,13 +74,11 @@ public class CookieUtil {
                     log.info("del cookieName:{},cookieValue:{}",ck.getName(),ck.getValue());
                     response.addCookie(ck);
                     return;
+
                 }
             }
         }
     }
-
-
-
 
 
 

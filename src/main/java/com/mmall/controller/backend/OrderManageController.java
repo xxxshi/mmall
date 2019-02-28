@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
  * @Version:
  **/
 @Controller
-@RequestMapping("/manage/order")
+@RequestMapping("/manage/order/")
 public class OrderManageController {
     @Autowired
     private IUserService iUserService;
@@ -40,18 +40,20 @@ public class OrderManageController {
     @ResponseBody
     public ServerResponse manageList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "1") int
             pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if(currentUser==null){
-            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
-        }
-        if(iUserService.checkIsAdmin((currentUser))){
-            //管理员操作
-            return iOrderService.manageList(pageNum, pageSize);
+//        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(currentUser==null){
+//            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
+//        }
+//        if(iUserService.checkIsAdmin((currentUser))){
+//            //管理员操作
+//            return iOrderService.manageList(pageNum, pageSize);
+//
+//        }else{
+//            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
+//        }
+        //管理员操作
+        return iOrderService.manageList(pageNum, pageSize);
 
-        }else{
-            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
-
-        }
     }
 
     /**
@@ -63,18 +65,21 @@ public class OrderManageController {
     @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse manageDetail(HttpSession session,Long orderNo) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if(currentUser==null){
-            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
-        }
-        if(iUserService.checkIsAdmin((currentUser))){
-            //管理员操作
-            return iOrderService.manageDetail(orderNo);
+//        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(currentUser==null){
+//            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
+//        }
+//        if(iUserService.checkIsAdmin((currentUser))){
+//            //管理员操作
+//            return iOrderService.manageDetail(orderNo);
+//
+//        }else{
+//            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
+//
+//        }
 
-        }else{
-            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
-
-        }
+        //管理员操作
+        return iOrderService.manageDetail(orderNo);
     }
 
     /**
@@ -91,18 +96,21 @@ public class OrderManageController {
             defaultValue
             = "1") int
             pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if(currentUser==null){
-            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
-        }
-        if(iUserService.checkIsAdmin((currentUser))){
-            //管理员操作
-            return iOrderService.manageSearch(orderNo, pageNum, pageSize);
+//        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(currentUser==null){
+//            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
+//        }
+//        if(iUserService.checkIsAdmin((currentUser))){
+//            //管理员操作
+//            return iOrderService.manageSearch(orderNo, pageNum, pageSize);
+//
+//        }else{
+//            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
+//
+//        }
 
-        }else{
-            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
-
-        }
+        //管理员操作
+        return iOrderService.manageSearch(orderNo, pageNum, pageSize);
     }
 
     /**
@@ -114,18 +122,21 @@ public class OrderManageController {
     @RequestMapping("send_goods.do")
     @ResponseBody
     public ServerResponse manageSendGoods(HttpSession session,Long orderNo) {
-        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
-        if(currentUser==null){
-            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
-        }
-        if(iUserService.checkIsAdmin((currentUser))){
-            //管理员操作
-            return iOrderService.manageSendGoods(orderNo);
+//        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+//        if(currentUser==null){
+//            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆，无法添加分类");
+//        }
+//        if(iUserService.checkIsAdmin((currentUser))){
+//            //管理员操作
+//            return iOrderService.manageSendGoods(orderNo);
+//
+//        }else{
+//            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
+//
+//        }
 
-        }else{
-            return ServerResponse.createByErrorMsg("您不是管理员，进行商品添加或更新");
-
-        }
+        //管理员操作
+        return iOrderService.manageSendGoods(orderNo);
     }
 
 
