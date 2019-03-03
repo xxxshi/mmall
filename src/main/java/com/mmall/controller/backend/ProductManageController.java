@@ -85,7 +85,7 @@ public class ProductManageController {
 //
 //        }
 
-        return iProductService.setSaleStatus(productId, productStatus);
+        return iProductService.setSaleStatus(productId, status);
     }
 
     /**
