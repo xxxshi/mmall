@@ -64,7 +64,8 @@ public class UserController {
 
 
         if (StringUtils.isEmpty(loginToken)) {
-            return ServerResponse.createByErrorMsg("退出失败，没有登录！");
+
+            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"用户未登陆");
         }
         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
         ShardedRedisPoolUtil.del(loginToken);
