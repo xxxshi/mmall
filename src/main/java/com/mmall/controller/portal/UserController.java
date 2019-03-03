@@ -60,7 +60,7 @@ public class UserController {
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
         ShardedRedisPoolUtil.del(loginToken);
-        return ServerResponse.createBySuccess();
+        return ServerResponse.createSuccessByMeg("退出成功！");
     }
 
     /**
