@@ -28,7 +28,8 @@ public class CORSFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         response.setContentType("textml;charset=UTF-8");
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("access-control-expose-headers","Authorization");
+        //response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "0");
         response.setHeader("Access-Control-Allow-Headers",
