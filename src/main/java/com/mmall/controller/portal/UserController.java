@@ -58,6 +58,10 @@ public class UserController {
     public ServerResponse<String> logout(HttpSession session, HttpServletRequest httpServletRequest,
                                          HttpServletResponse httpServletResponse) {
         String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        System.out.println("loginToken:"+loginToken);
+        if (StringUtils.isEmpty(loginToken)) {
+            return ServerResponse.createByErrorMsg("退出失败，没有登录！");
+        }
         CookieUtil.delLoginToken(httpServletRequest,httpServletResponse);
         ShardedRedisPoolUtil.del(loginToken);
         return ServerResponse.createSuccessByMeg("退出成功！");
