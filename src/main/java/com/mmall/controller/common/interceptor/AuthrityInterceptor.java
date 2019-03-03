@@ -29,6 +29,21 @@ import java.util.Map;
 public class AuthrityInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+       //过滤器的代码
+        response.setContentType("textml;charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        //response.setHeader("access-control-expose-headers","Authorization");
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "0");
+        response.setHeader("Access-Control-Allow-Headers",
+                "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("XDomainRequestAllowed", "1");
+
+
+
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         String methodName = handlerMethod.getMethod().getName();
         String className = handlerMethod.getBean().getClass().getSimpleName();
