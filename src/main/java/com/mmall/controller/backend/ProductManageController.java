@@ -73,7 +73,7 @@ public class ProductManageController {
      */
     @RequestMapping("/set_sale_status.do")
     @ResponseBody
-    public ServerResponse setSaleStatus(HttpSession session, Integer productId,Integer productStatus) {
+    public ServerResponse setSaleStatus(HttpSession session, Integer productId,Integer status) {
 //        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
 //        if(currentUser==null){
 //            return ServerResponse.createByErrorCodeMsg(ResponseCode.NEED_LOGIN.getCode(),"进行商品添加或更新");
