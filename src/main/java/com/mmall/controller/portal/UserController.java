@@ -73,6 +73,7 @@ public class UserController {
     }
 
     /**
+     *
      * 注册--控制层
      * @param user
      * @return
